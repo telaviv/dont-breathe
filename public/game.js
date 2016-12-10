@@ -1,3 +1,7 @@
+const GREEN = 0x73fe00;
+const RED = 0xFF3300;
+const BLUE = 0x66CCFF;
+
 class O2Meter {
   constructor() {
     this.MAX_O2 = 1000;
@@ -16,13 +20,13 @@ class O2Meter {
     const oxygenHeight = meterHeight - meterHeight * this.currentO2 / this.MAX_O2;
 
     // draw the outside meter
-    rectangle.lineStyle(4, 0xFF3300, 1);
-    rectangle.beginFill(0x66CCFF);
+    rectangle.lineStyle(4, RED, 1);
+    rectangle.beginFill(BLUE);
     rectangle.drawRect(0, 0, 64, meterHeight);
     rectangle.endFill();
 
     // draw the oxygen inside the meter
-    rectangle.beginFill(0xFF3300);
+    rectangle.beginFill(RED);
     rectangle.drawRect(0, 0, 64, oxygenHeight);
     rectangle.endFill();
 
@@ -33,8 +37,7 @@ class O2Meter {
 class Plant {
   draw() {
     const graphics = new PIXI.Graphics();
-    const green = 0x73fe00;
-    graphics.lineStyle(4, green, 1);
+    graphics.lineStyle(4, GREEN, 1);
     graphics.drawRect(15, 15, 1, 20);
     graphics.drawRect(15, 21, 5, 1);
     graphics.drawRect(7, 15, 8, 1);
