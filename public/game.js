@@ -14,6 +14,10 @@ class GameScene {
     this.o2meter = new O2Meter();
   }
 
+  update(dt) {
+    console.log('time elapsed', dt);
+  }
+
   draw() {
     const stage = new PIXI.Container();
     const o2sprite = this.o2meter.draw();
@@ -30,9 +34,31 @@ class GameRunner {
     this.renderer = PIXI.autoDetectRenderer(1024, 768);
   }
 
+  update(dt) {
+    this.gameScene.update(dt);
+    this.renderer.render(this.gameScene.draw());
+  }
+
   run() {
     document.body.appendChild(this.renderer.view);
-    this.renderer.render(this.gameScene.draw());
+
+    const renderClock = new RenderClock();
+    renderClock.run(this.update.bind(this));
+  }
+}
+
+class RenderClock {
+
+  run(cb) {
+    let time = performance.now();
+
+    const animationFrameCB = (ntime) => {
+      const dt = ntime - time;
+      time = ntime;
+      cb(dt);
+      requestAnimationFrame(animationFrameCB);
+    }
+    requestAnimationFrame(animationFrameCB);
   }
 }
 
