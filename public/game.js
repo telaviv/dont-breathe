@@ -1,4 +1,15 @@
 class O2Meter {
+  constructor() {
+    this.MAX_O2 = 1000;
+    this.DEPLETION_RATE = 5;
+    this.currentO2 = this.MAX_O2;
+  }
+
+  update(dt) {
+    this.currentO2 = Math.max(0, this.currentO2 - this.DEPLETION_RATE * dt);
+    console.log('current O2', this.currentO2);
+  }
+
   draw() {
     const rectangle = new PIXI.Graphics();
     rectangle.lineStyle(4, 0xFF3300, 1);
@@ -15,7 +26,7 @@ class GameScene {
   }
 
   update(dt) {
-    console.log('time elapsed', dt);
+    this.o2meter.update(dt);
   }
 
   draw() {
@@ -55,7 +66,7 @@ class RenderClock {
     const animationFrameCB = (ntime) => {
       const dt = ntime - time;
       time = ntime;
-      cb(dt);
+      cb(dt / 1000);
       requestAnimationFrame(animationFrameCB);
     }
     requestAnimationFrame(animationFrameCB);
