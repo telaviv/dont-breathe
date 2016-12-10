@@ -1,3 +1,14 @@
+class O2Meter {
+  draw() {
+    var rectangle = new PIXI.Graphics();
+    rectangle.lineStyle(4, 0xFF3300, 1);
+    rectangle.beginFill(0x66CCFF);
+    rectangle.drawRect(0, 0, 64, 64 * 6);
+    rectangle.endFill();
+    return rectangle;
+  }
+}
+
 //Create the renderer
 var renderer = PIXI.autoDetectRenderer(1024, 768);
 
@@ -6,15 +17,10 @@ document.body.appendChild(renderer.view);
 
 //Create a container object called the `stage`
 var stage = new PIXI.Container();
-
-var rectangle = new PIXI.Graphics();
-rectangle.lineStyle(4, 0xFF3300, 1);
-rectangle.beginFill(0x66CCFF);
-rectangle.drawRect(0, 0, 64, 64);
-rectangle.endFill();
-rectangle.x = 170;
-rectangle.y = 170;
-stage.addChild(rectangle);
+var o2Meter = (new O2Meter()).draw();
+o2Meter.x = 170;
+o2Meter.y = 170;
+stage.addChild(o2Meter);
 
 var message = new PIXI.Text(
   "Hello Pixi!",
