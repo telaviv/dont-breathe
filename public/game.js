@@ -16,5 +16,13 @@ rectangle.x = 170;
 rectangle.y = 170;
 stage.addChild(rectangle);
 
+var message = new PIXI.Text(
+  "Hello Pixi!",
+  {font: "32px sans-serif", fill: "white"}
+);
+
+message.position.set(54, 96);
+stage.addChild(message);
+
 //Tell the `renderer` to `render` the `stage`
 renderer.render(stage);
