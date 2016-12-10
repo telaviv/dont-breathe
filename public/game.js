@@ -30,9 +30,22 @@ class O2Meter {
   }
 }
 
+class Plant {
+  draw() {
+    const graphics = new PIXI.Graphics();
+    const green = 0x73fe00;
+    graphics.lineStyle(4, green, 1);
+    graphics.drawRect(15, 15, 1, 20);
+    graphics.drawRect(15, 21, 5, 1);
+    graphics.drawRect(7, 15, 8, 1);
+    return graphics;
+  }
+}
+
 class GameScene {
   constructor() {
     this.o2meter = new O2Meter();
+    this.plant = new Plant();
   }
 
   update(dt) {
@@ -44,7 +57,12 @@ class GameScene {
     const o2sprite = this.o2meter.draw();
     o2sprite.x = 100;
     o2sprite.y = 100;
+    const plantSprite = this.plant.draw();
+    plantSprite.x = 300;
+    plantSprite.y = 300;
+
     stage.addChild(o2sprite);
+    stage.addChild(plantSprite);
     return stage;
   }
 }
