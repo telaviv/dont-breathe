@@ -16,6 +16,10 @@ class O2Meter {
     rectangle.beginFill(0x66CCFF);
     rectangle.drawRect(0, 0, 64, 64 * 6);
     rectangle.endFill();
+    rectangle.beginFill(0xFF3300);
+    rectangle.drawRect(4, 4, 56, 56 * 1);
+    rectangle.endFill();
+
     return rectangle;
   }
 }
