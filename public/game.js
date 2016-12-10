@@ -17,20 +17,24 @@ class GameScene {
   draw() {
     const stage = new PIXI.Container();
     const o2sprite = this.o2meter.draw();
-    o2sprite.x = 170;
-    o2sprite.y = 170;
+    o2sprite.x = 100;
+    o2sprite.y = 100;
     stage.addChild(o2sprite);
     return stage;
   }
 }
 
+class GameRunner {
+  constructor() {
+    this.gameScene = new GameScene();
+    this.renderer = PIXI.autoDetectRenderer(1024, 768);
+  }
+
+  run() {
+    document.body.appendChild(this.renderer.view);
+    this.renderer.render(this.gameScene.draw());
+  }
+}
 
 
-//Create the renderer
-var renderer = PIXI.autoDetectRenderer(1024, 768);
-
-//Add the canvas to the HTML document
-document.body.appendChild(renderer.view);
-
-//Tell the `renderer` to `render` the `stage`
-renderer.render((new GameScene).draw());
+(new GameRunner).run()
