@@ -12,12 +12,18 @@ class O2Meter {
 
   draw() {
     const rectangle = new PIXI.Graphics();
+    const meterHeight = 64 * 6;
+    const oxygenHeight = meterHeight - meterHeight * this.currentO2 / this.MAX_O2;
+
+    // draw the outside meter
     rectangle.lineStyle(4, 0xFF3300, 1);
     rectangle.beginFill(0x66CCFF);
-    rectangle.drawRect(0, 0, 64, 64 * 6);
+    rectangle.drawRect(0, 0, 64, meterHeight);
     rectangle.endFill();
+
+    // draw the oxygen inside the meter
     rectangle.beginFill(0xFF3300);
-    rectangle.drawRect(4, 4, 56, 56 * 1);
+    rectangle.drawRect(0, 0, 64, oxygenHeight);
     rectangle.endFill();
 
     return rectangle;
