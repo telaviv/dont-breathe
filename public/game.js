@@ -1,7 +1,7 @@
 const GREEN = 0x73fe00;
 const RED = 0xFF3300;
 const BLUE = 0x66CCFF;
-const WHITE = 0x093A3E;
+const BROWN = 0x4B5043;
 const BLACK = 0X000000;
 const BLOCK_SIZE = 32;
 const COLUMNS = 32;
@@ -75,8 +75,8 @@ class TextBox {
     const oxygenHeight = meterHeight - meterHeight * this.oxygen / MAX_O2;
 
     // draw the outside meter
-    rectangle.lineStyle(4, WHITE, 1);
-    rectangle.beginFill(0x3AAFB9);
+    rectangle.lineStyle(4, 0x093A3E, 1);
+    rectangle.beginFill(BROWN);
     rectangle.drawRect(0, 0, 500, 100);
     rectangle.endFill();
 
@@ -140,7 +140,7 @@ class Character {
       'ArrowRight': {x: 1, y: 0},
     }
 
-    this.movementDelay = 0.25;
+    this.movementDelay = 0.1;
     this.moveCode = null;
     this.timeSinceLastMovement = 0;
     this.position = {x: 15 * BLOCK_SIZE, y: 15 * BLOCK_SIZE};
