@@ -2,6 +2,7 @@ const GREEN = 0x73fe00;
 const RED = 0xFF3300;
 const BLUE = 0x66CCFF;
 const BLACK = 0X000000;
+const BLOCK_SIZE = 32;
 
 class Keyboard {
   constructor() {
@@ -155,7 +156,6 @@ class GameScene {
 
 class Stage {
   constructor() {
-    this.boxSize = 32;
     this.columns = 32;
     this.rows = 24;
     this.plant = new Plant();
@@ -163,11 +163,11 @@ class Stage {
   }
 
   get width() {
-    return this.boxSize * this.columns;
+    return BLOCK_SIZE * this.columns;
   }
 
   get height() {
-    return this.boxSize * this.rows;
+    return BLOCK_SIZE * this.rows;
   }
 
 
@@ -177,7 +177,7 @@ class Stage {
 
   gridPosition() {
     const clampPosition = (dim) => {
-      return Math.floor((dim + 0.5 * this.boxSize) / this.boxSize) * this.boxSize;
+      return Math.floor((dim + 0.5 * BLOCK_SIZE) / BLOCK_SIZE) * BLOCK_SIZE;
     }
     return {
       x: clampPosition(this.character.position.x),
@@ -197,7 +197,7 @@ class Stage {
     const position = this.gridPosition();
     const graphics = new PIXI.Graphics();
     graphics.lineStyle(4, BLUE, 0.15);
-    graphics.drawRect(position.x, position.y, this.boxSize, this.boxSize);
+    graphics.drawRect(position.x, position.y, BLOCK_SIZE, BLOCK_SIZE);
     return graphics;
   }
 
