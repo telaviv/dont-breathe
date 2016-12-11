@@ -1,6 +1,7 @@
 const GREEN = 0x73fe00;
 const RED = 0xFF3300;
 const BLUE = 0x66CCFF;
+const BLACK = 0X000000;
 
 class O2Meter {
   constructor() {
@@ -11,7 +12,6 @@ class O2Meter {
 
   update(dt) {
     this.currentO2 = Math.max(0, this.currentO2 - this.DEPLETION_RATE * dt);
-    console.log('current O2', this.currentO2);
   }
 
   draw() {
@@ -45,10 +45,26 @@ class Plant {
   }
 }
 
+class Character {
+  draw() {
+    const graphics = new PIXI.Graphics();
+    graphics.beginFill(RED);
+    graphics.drawRect(8, 4, 16, 28);
+    graphics.endFill();
+
+    graphics.beginFill(BLACK);
+    graphics.drawRect(12, 8, 8, 8);
+    graphics.endFill();
+
+    return graphics;
+  }
+}
+
 class GameScene {
   constructor() {
     this.o2meter = new O2Meter();
     this.plant = new Plant();
+    this.character = new Character();
   }
 
   update(dt) {
@@ -63,9 +79,13 @@ class GameScene {
     const plantSprite = this.plant.draw();
     plantSprite.x = 300;
     plantSprite.y = 300;
+    const characterSprite = this.character.draw();
+    characterSprite.x = 500;
+    characterSprite.y = 500;
 
     stage.addChild(o2sprite);
     stage.addChild(plantSprite);
+    stage.addChild(characterSprite);
     return stage;
   }
 }
