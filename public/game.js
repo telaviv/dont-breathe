@@ -71,10 +71,14 @@ const keyboard = new Keyboard();
 
 class TextBox {
   constructor() {
-    this.text = 'Hey world!';
+    this.text = '';
   }
 
   draw() {
+    if (this.text === '') {
+      return new PIXI.Graphics();
+    }
+
     const rectangle = new PIXI.Graphics();
     const width = 500;
     const height = 100;
@@ -87,10 +91,9 @@ class TextBox {
     rectangle.x = 250;
     rectangle.y = 650;
 
-
     // now draw the text
     const text = new PIXI.Text(
-      this.text,{
+      this.text, {
         fontFamily : 'verdana',
         fontSize: 24,
         fontWeight: 'bold',
@@ -140,6 +143,10 @@ class O2Meter {
 class Plant {
   constructor() {
     this.o2Generation = 0.25;
+  }
+
+  get statusMessage() {
+    return 'This plant is looking healthy!';
   }
 
   draw() {
@@ -244,6 +251,7 @@ class GameScene {
   update(dt) {
     this.stage.update(dt);
     this.o2meter.oxygen = this.stage.oxygen;
+    this.textBox.text = this.stage.statusMessage;
   }
 
   draw() {
@@ -268,10 +276,21 @@ class Plants {
     this.grid[10][10] = new Plant();
   }
 
+  hasPlant(position) {
+    const {x, y} = position;
+    return !!this.grid[x][y];
+  }
+
   addPlant(position) {
     const {x, y} = position;
     this.grid[x][y] = new Plant();
   }
+
+  plantStatus(position) {
+    const {x, y} = position;
+    return this.grid[x][y].statusMessage;
+  }
+
 
   o2GenerationRate() {
     let sum = 0;
@@ -284,6 +303,7 @@ class Plants {
     }
     return sum;
   }
+
 
   draw() {
     const scene = new PIXI.Container();
@@ -308,6 +328,7 @@ class Stage {
     this.plants = new Plants();
     this.character = new Character();
     this.oxygen = 750;
+    this.statusMessage = '';
     eventQueue.listen('keydown', this.onKeyDown.bind(this));
   }
 
@@ -323,6 +344,14 @@ class Stage {
     this.character.update(dt);
     const d02 = dt * (this.plants.o2GenerationRate() - this.character.o2Consumption);
     this.oxygen = clamp(this.oxygen + d02, 0, MAX_O2);
+
+    // if the player is on a plant, let's report on the plant's status
+    const playerPosition = this.character.gridPosition;
+    if (this.plants.hasPlant(playerPosition)) {
+      this.statusMessage = this.plants.plantStatus(playerPosition);
+    } else {
+      this.statusMessage = '';
+    }
   }
 
   onKeyDown(keyCode) {
