@@ -64,9 +64,9 @@ class Plant {
   draw() {
     const graphics = new PIXI.Graphics();
     graphics.lineStyle(4, GREEN, 1);
-    graphics.drawRect(15, 15, 1, 20);
-    graphics.drawRect(15, 21, 5, 1);
-    graphics.drawRect(7, 15, 8, 1);
+    graphics.drawRect(15, 5, 1, 20);
+    graphics.drawRect(15, 11, 5, 1);
+    graphics.drawRect(7, 5, 8, 1);
     return graphics;
   }
 }
@@ -83,7 +83,7 @@ class Character {
     this.movementDelay = 0.25;
     this.moveCode = null;
     this.timeSinceLastMovement = 0;
-    this.position = {x: 500, y: 500};
+    this.position = {x: 15 * BLOCK_SIZE, y: 15 * BLOCK_SIZE};
   }
 
   update(dt) {
@@ -183,7 +183,7 @@ class Plants {
       }
       this.grid.push(row);
     }
-    this.grid[10][10] = new Plant();
+    this.grid[0][0] = new Plant();
   }
 
   draw() {
