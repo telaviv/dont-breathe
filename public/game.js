@@ -61,18 +61,13 @@ const keyboard = new Keyboard();
 class O2Meter {
   constructor() {
     this.MAX_O2 = 1000;
-    this.DEPLETION_RATE = 5;
-    this.currentO2 = this.MAX_O2;
-  }
-
-  update(dt) {
-    this.currentO2 = Math.max(0, this.currentO2 - this.DEPLETION_RATE * dt);
+    this.oxygen = 750;
   }
 
   draw() {
     const rectangle = new PIXI.Graphics();
     const meterHeight = 64 * 6;
-    const oxygenHeight = meterHeight - meterHeight * this.currentO2 / this.MAX_O2;
+    const oxygenHeight = meterHeight - meterHeight * this.oxygen / this.MAX_O2;
 
     // draw the outside meter
     rectangle.lineStyle(4, RED, 1);
@@ -116,6 +111,7 @@ class Character {
     this.moveCode = null;
     this.timeSinceLastMovement = 0;
     this.position = {x: 15 * BLOCK_SIZE, y: 15 * BLOCK_SIZE};
+    this.o2Consumption = 5.0;
   }
 
   update(dt) {
@@ -192,9 +188,8 @@ class GameScene {
 
   update(dt) {
     this.stage.update(dt);
-    this.o2meter.update(dt);
+    this.o2meter.oxygen = this.stage.oxygen;
   }
-
 
   draw() {
     const scene = new PIXI.Container();
@@ -247,6 +242,7 @@ class Stage {
     this.rows = 24;
     this.plants = new Plants();
     this.character = new Character();
+    this.oxygen = 750;
     eventQueue.listen('keydown', this.onKeyDown.bind(this));
   }
 
@@ -260,6 +256,7 @@ class Stage {
 
   update(dt) {
     this.character.update(dt);
+    this.oxygen -= dt * this.character.o2Consumption;
   }
 
   onKeyDown(keyCode) {
@@ -317,7 +314,7 @@ class RenderClock {
     let time = performance.now();
 
     const animationFrameCB = (ntime) => {
-      const dt = ntime - time;
+      const dt = Math.max(0, ntime - time);
       time = ntime;
       cb(dt / 1000);
       requestAnimationFrame(animationFrameCB);
