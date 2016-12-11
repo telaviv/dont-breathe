@@ -175,11 +175,29 @@ class Stage {
     this.character.update(dt);
   }
 
+  gridPosition() {
+    const clampPosition = (dim) => {
+      return Math.floor((dim + 0.5 * this.boxSize) / this.boxSize) * this.boxSize;
+    }
+    return {
+      x: clampPosition(this.character.position.x),
+      y: clampPosition(this.character.position.y),
+    };
+  }
+
   drawBackground() {
     const graphics = new PIXI.Graphics();
     graphics.beginFill(0x7E6B8F);
     graphics.drawRect(0, 0, this.width, this.height);
     graphics.endFill();
+    return graphics;
+  }
+
+  drawGrid() {
+    const position = this.gridPosition();
+    const graphics = new PIXI.Graphics();
+    graphics.lineStyle(4, BLUE, 1);
+    graphics.drawRect(position.x, position.y, this.boxSize, this.boxSize);
     return graphics;
   }
 
@@ -191,6 +209,7 @@ class Stage {
     const characterSprite = this.character.draw();
 
     stage.addChild(this.drawBackground());
+    stage.addChild(this.drawGrid());
     stage.addChild(plantSprite);
     stage.addChild(characterSprite);
 
@@ -235,4 +254,4 @@ class RenderClock {
 }
 
 
-(new GameRunner).run()
+(new GameRunner).run();
