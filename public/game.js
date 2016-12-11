@@ -67,14 +67,47 @@ class Plant {
 
 class Character {
   constructor() {
-    this.velocity = 256;
+    this.velocity = 200;
     this.position = {x: 500, y: 500};
   }
 
   update(dt) {
-    if (keyboard.keys.has('ArrowUp')) {
-      this.position.y -=  dt * this.velocity;
+    const direction = this.findDirectionVector();
+    const diffVector = this.scalarMultiply(direction, this.velocity * dt);
+    this.position = this.addVectors(this.position, diffVector);
+  }
+
+  findDirectionVector() {
+    const keyDirections = [
+      {code: 'ArrowUp', direction: {x: 0, y: -1}},
+      {code: 'ArrowDown', direction: {x: 0, y: 1}},
+      {code: 'ArrowLeft', direction: {x: -1, y: 0}},
+      {code: 'ArrowRight', direction: {x: 1, y: 0}},
+    ]
+    let directionSum = {x: 0, y: 0};
+
+    for (let keyDirection of keyDirections) {
+      if (keyboard.keys.has(keyDirection.code)) {
+        directionSum = this.addVectors(directionSum, keyDirection.direction);
+      }
     }
+    if (directionSum.x !== 0 && directionSum.y !== 0) {
+      directionSum = this.normalizeVector(directionSum);
+    }
+    return directionSum;
+  }
+
+  addVectors(a, b) {
+    return {x: a.x + b.x, y: a.y + b.y};
+  }
+
+  normalizeVector(v) {
+    const magnitude = Math.sqrt(v.x * v.x + v.y * v.y);
+    return { x: v.x / magnitude, y: v.y / magnitude };
+  }
+
+  scalarMultiply(v, scale) {
+    return {x: v.x * scale, y: v.y * scale};
   }
 
   draw() {
