@@ -67,7 +67,7 @@ class Plant {
 
 class Character {
   constructor() {
-    this.velocity = 200;
+    this.velocity = 150;
     this.position = {x: 500, y: 500};
   }
 
@@ -170,6 +170,9 @@ class Stage {
 
     stage.addChild(plantSprite);
     stage.addChild(characterSprite);
+
+    stage.x = 500 - this.character.position.x;
+    stage.y = 350 - this.character.position.y;
     return stage;
   }
 }
