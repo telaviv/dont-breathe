@@ -138,6 +138,7 @@ class GameScene {
     this.o2meter.update(dt);
   }
 
+
   draw() {
     const scene = new PIXI.Container();
     const stageSprite = this.stage.draw();
@@ -161,6 +162,14 @@ class Stage {
     this.character.update(dt);
   }
 
+  drawBackground() {
+    const graphics = new PIXI.Graphics();
+    graphics.beginFill(0x7E6B8F);
+    graphics.drawRect(0, 0, 1024, 768);
+    graphics.endFill();
+    return graphics;
+  }
+
   draw() {
     const stage = new PIXI.Container();
     const plantSprite = this.plant.draw();
@@ -168,6 +177,7 @@ class Stage {
     plantSprite.y = 300;
     const characterSprite = this.character.draw();
 
+    stage.addChild(this.drawBackground());
     stage.addChild(plantSprite);
     stage.addChild(characterSprite);
 
