@@ -50,6 +50,9 @@ class O2Meter {
     rectangle.drawRect(0, 0, 64, oxygenHeight);
     rectangle.endFill();
 
+    rectangle.x = 50;
+    rectangle.y = 50;
+
     return rectangle;
   }
 }
@@ -143,8 +146,6 @@ class GameScene {
     const scene = new PIXI.Container();
     const stageSprite = this.stage.draw();
     const o2sprite = this.o2meter.draw();
-    o2sprite.x = 100;
-    o2sprite.y = 100;
 
     scene.addChild(stageSprite);
     scene.addChild(o2sprite);
