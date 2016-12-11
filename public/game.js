@@ -69,19 +69,31 @@ class Keyboard {
 const keyboard = new Keyboard();
 
 class TextBox {
+  constructor() {
+    this.text = 'Hey world!';
+  }
+
   draw() {
     const rectangle = new PIXI.Graphics();
     const meterHeight = 64 * 6;
     const oxygenHeight = meterHeight - meterHeight * this.oxygen / MAX_O2;
 
-    // draw the outside meter
+    // draw the outside box
     rectangle.lineStyle(4, 0x093A3E, 1);
     rectangle.beginFill(BROWN);
     rectangle.drawRect(0, 0, 500, 100);
     rectangle.endFill();
-
     rectangle.x = 250;
     rectangle.y = 650;
+
+
+    // now draw the text
+    const text = new PIXI.Text(
+      this.text,
+      {fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'}
+    );
+
+    rectangle.addChild(text);
 
     return rectangle;
   }
