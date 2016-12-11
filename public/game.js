@@ -154,9 +154,21 @@ class GameScene {
 
 class Stage {
   constructor() {
+    this.boxSize = 32;
+    this.columns = 32;
+    this.rows = 24;
     this.plant = new Plant();
     this.character = new Character();
   }
+
+  get width() {
+    return this.boxSize * this.columns;
+  }
+
+  get height() {
+    return this.boxSize * this.rows;
+  }
+
 
   update(dt) {
     this.character.update(dt);
@@ -165,7 +177,7 @@ class Stage {
   drawBackground() {
     const graphics = new PIXI.Graphics();
     graphics.beginFill(0x7E6B8F);
-    graphics.drawRect(0, 0, 1024, 768);
+    graphics.drawRect(0, 0, this.width, this.height);
     graphics.endFill();
     return graphics;
   }
