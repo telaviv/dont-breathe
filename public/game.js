@@ -2,6 +2,7 @@ const GREEN = 0x73fe00;
 const RED = 0xFF3300;
 const BLUE = 0x66CCFF;
 const BROWN = 0x4B5043;
+const WHITE = 0XFFFFFF;
 const BLACK = 0X000000;
 const BLOCK_SIZE = 32;
 const COLUMNS = 32;
@@ -75,13 +76,13 @@ class TextBox {
 
   draw() {
     const rectangle = new PIXI.Graphics();
-    const meterHeight = 64 * 6;
-    const oxygenHeight = meterHeight - meterHeight * this.oxygen / MAX_O2;
+    const width = 500;
+    const height = 100;
 
     // draw the outside box
     rectangle.lineStyle(4, 0x093A3E, 1);
     rectangle.beginFill(BROWN);
-    rectangle.drawRect(0, 0, 500, 100);
+    rectangle.drawRect(0, 0, width, height);
     rectangle.endFill();
     rectangle.x = 250;
     rectangle.y = 650;
@@ -89,9 +90,17 @@ class TextBox {
 
     // now draw the text
     const text = new PIXI.Text(
-      this.text,
-      {fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'}
+      this.text,{
+        fontFamily : 'verdana',
+        fontSize: 24,
+        fontWeight: 'bold',
+        fill : WHITE,
+        align : 'center',
+      }
     );
+    text.anchor.set(0.5);
+    text.x = width / 2;
+    text.y = height / 2;
 
     rectangle.addChild(text);
 
@@ -379,6 +388,5 @@ class RenderClock {
     requestAnimationFrame(animationFrameCB);
   }
 }
-
 
 (new GameRunner).run();
