@@ -6,6 +6,39 @@ const BLOCK_SIZE = 32;
 const COLUMNS = 32;
 const ROWS = 24;
 
+class EventQueue {
+  constructor() {
+    this.listeners = {};
+    this.queue = [];
+  }
+
+  listen(eventType, cb) {
+    if (this.listeners[eventType] !== undefined) {
+      this.listeners[eventType].push(cb);
+    } else {
+      this.listeners[eventType] = [cb];
+    }
+  }
+
+  enqueue(eventType, data) {
+    if (this.listeners[eventType] === undefined) {
+      return;
+    }
+
+    for (let cb of this.listeners[eventType]) {
+      this.queue.push(() => cb(data));
+    }
+  }
+
+  clearQueue() {
+    for (let thunk of this.queue) {
+      thunk();
+    }
+    this.queue = [];
+  }
+}
+const eventQueue = new EventQueue();
+
 class Keyboard {
   constructor() {
     this.keys = new Set([]);
@@ -15,12 +48,11 @@ class Keyboard {
 
   onDown(event) {
     this.keys.add(event.code);
-    console.log(this.keys);
+    eventQueue.enqueue('keydown', event.code);
   }
 
   onUp(event) {
     this.keys.delete(event.code);
-    console.log(this.keys);
   }
 }
 const keyboard = new Keyboard();
@@ -208,6 +240,7 @@ class Stage {
     this.rows = 24;
     this.plants = new Plants();
     this.character = new Character();
+    eventQueue.listen('keydown', this.onKeyDown.bind(this));
   }
 
   get width() {
@@ -218,9 +251,12 @@ class Stage {
     return BLOCK_SIZE * this.rows;
   }
 
-
   update(dt) {
     this.character.update(dt);
+  }
+
+  onKeyDown(data) {
+    console.log('keydown~!');
   }
 
   drawBackground() {
@@ -253,6 +289,7 @@ class GameRunner {
   }
 
   update(dt) {
+    eventQueue.clearQueue();
     this.gameScene.update(dt);
     this.renderer.render(this.gameScene.draw());
   }
