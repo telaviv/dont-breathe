@@ -67,12 +67,14 @@ class Plant {
 
 class Character {
   constructor() {
-    this.velocity = 32;
+    this.velocity = 256;
     this.position = {x: 500, y: 500};
   }
 
   update(dt) {
-
+    if (keyboard.keys.has('ArrowUp')) {
+      this.position.y -=  dt * this.velocity;
+    }
   }
 
   draw() {
@@ -101,6 +103,7 @@ class GameScene {
 
   update(dt) {
     this.o2meter.update(dt);
+    this.character.update(dt);
   }
 
   draw() {
