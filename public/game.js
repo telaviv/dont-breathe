@@ -196,7 +196,7 @@ class Stage {
   drawGrid() {
     const position = this.gridPosition();
     const graphics = new PIXI.Graphics();
-    graphics.lineStyle(4, BLUE, 1);
+    graphics.lineStyle(4, BLUE, 0.15);
     graphics.drawRect(position.x, position.y, this.boxSize, this.boxSize);
     return graphics;
   }
