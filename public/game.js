@@ -118,17 +118,6 @@ class Character {
     return this.keyDirections[this.moveCode];
   }
 
-  clampedPosition() {
-    return {
-      x: this.clampPosition(this.position.x),
-      y: this.clampPosition(this.position.y),
-    };
-  }
-
-  clampPosition(dim) {
-    return Math.floor((dim + 0.5 * BLOCK_SIZE) / BLOCK_SIZE) * BLOCK_SIZE;
-  }
-
   addVectors(a, b) {
     return {x: a.x + b.x, y: a.y + b.y};
   }
@@ -152,9 +141,8 @@ class Character {
     graphics.drawRect(12, 8, 8, 8);
     graphics.endFill();
 
-    const clampedPos = this.clampedPosition();
-    graphics.x = clampedPos.x;
-    graphics.y = clampedPos.y;
+    graphics.x = this.position.x;
+    graphics.y = this.position.y;
 
     return graphics;
   }
@@ -212,14 +200,6 @@ class Stage {
     return graphics;
   }
 
-  drawGridGuide() {
-    const position = this.character.clampedPosition();
-    const graphics = new PIXI.Graphics();
-    graphics.lineStyle(4, BLUE, 0.15);
-    graphics.drawRect(position.x, position.y, BLOCK_SIZE, BLOCK_SIZE);
-    return graphics;
-  }
-
   draw() {
     const stage = new PIXI.Container();
     const plantSprite = this.plant.draw();
@@ -231,9 +211,8 @@ class Stage {
     stage.addChild(plantSprite);
     stage.addChild(characterSprite);
 
-    const clampedPos = this.character.clampedPosition();
-    stage.x = 500 - clampedPos.x;
-    stage.y = 350 - clampedPos.y;
+    stage.x = 500 - this.character.position.x;
+    stage.y = 350 - this.character.position.y;
     return stage;
   }
 }
