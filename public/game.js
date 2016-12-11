@@ -156,13 +156,15 @@ class Character {
     return {x: a.x + b.x, y: a.y + b.y};
   }
 
-  normalizeVector(v) {
-    const magnitude = Math.sqrt(v.x * v.x + v.y * v.y);
-    return { x: v.x / magnitude, y: v.y / magnitude };
-  }
-
   scalarMultiply(v, scale) {
     return {x: v.x * scale, y: v.y * scale};
+  }
+
+  get gridPosition() {
+    return {
+      x: this.position.x / BLOCK_SIZE,
+      y: this.position.y / BLOCK_SIZE,
+    };
   }
 
   draw() {
@@ -218,6 +220,11 @@ class Plants {
     this.grid[10][10] = new Plant();
   }
 
+  addPlant(position) {
+    const {x, y} = position;
+    this.grid[x][y] = new Plant();
+  }
+
   draw() {
     const scene = new PIXI.Container();
     for (let x = 0; x < ROWS; ++x) {
@@ -255,8 +262,10 @@ class Stage {
     this.character.update(dt);
   }
 
-  onKeyDown(data) {
-    console.log('keydown~!');
+  onKeyDown(keyCode) {
+    if (keyCode === 'KeyP') {
+      this.plants.addPlant(this.character.gridPosition);
+    }
   }
 
   drawBackground() {
