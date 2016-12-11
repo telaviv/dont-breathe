@@ -193,7 +193,7 @@ class Stage {
     return graphics;
   }
 
-  drawGrid() {
+  drawGridGuide() {
     const position = this.gridPosition();
     const graphics = new PIXI.Graphics();
     graphics.lineStyle(4, BLUE, 0.15);
@@ -209,7 +209,7 @@ class Stage {
     const characterSprite = this.character.draw();
 
     stage.addChild(this.drawBackground());
-    stage.addChild(this.drawGrid());
+    stage.addChild(this.drawGridGuide());
     stage.addChild(plantSprite);
     stage.addChild(characterSprite);
 
