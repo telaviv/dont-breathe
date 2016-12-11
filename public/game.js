@@ -1,6 +1,7 @@
 const GREEN = 0x73fe00;
 const RED = 0xFF3300;
 const BLUE = 0x66CCFF;
+const WHITE = 0x093A3E;
 const BLACK = 0X000000;
 const BLOCK_SIZE = 32;
 const COLUMNS = 32;
@@ -66,6 +67,25 @@ class Keyboard {
   }
 }
 const keyboard = new Keyboard();
+
+class TextBox {
+  draw() {
+    const rectangle = new PIXI.Graphics();
+    const meterHeight = 64 * 6;
+    const oxygenHeight = meterHeight - meterHeight * this.oxygen / MAX_O2;
+
+    // draw the outside meter
+    rectangle.lineStyle(4, WHITE, 1);
+    rectangle.beginFill(0x3AAFB9);
+    rectangle.drawRect(0, 0, 500, 100);
+    rectangle.endFill();
+
+    rectangle.x = 250;
+    rectangle.y = 650;
+
+    return rectangle;
+  }
+}
 
 
 class O2Meter {
@@ -197,6 +217,7 @@ class GameScene {
   constructor() {
     this.stage = new Stage();
     this.o2meter = new O2Meter();
+    this.textBox = new TextBox();
   }
 
   update(dt) {
@@ -206,11 +227,9 @@ class GameScene {
 
   draw() {
     const scene = new PIXI.Container();
-    const stageSprite = this.stage.draw();
-    const o2sprite = this.o2meter.draw();
-
-    scene.addChild(stageSprite);
-    scene.addChild(o2sprite);
+    scene.addChild(this.stage.draw());
+    scene.addChild(this.o2meter.draw());
+    scene.addChild(this.textBox.draw());
     return scene;
   }
 }
