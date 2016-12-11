@@ -3,6 +3,26 @@ const RED = 0xFF3300;
 const BLUE = 0x66CCFF;
 const BLACK = 0X000000;
 
+class Keyboard {
+  constructor() {
+    this.keys = new Set([]);
+    addEventListener('keydown', this.onDown.bind(this));
+    addEventListener('keyup', this.onUp.bind(this));
+  }
+
+  onDown(event) {
+    this.keys.add(event.code);
+    console.log(this.keys);
+  }
+
+  onUp(event) {
+    this.keys.delete(event.code);
+    console.log(this.keys);
+  }
+}
+const keyboard = new Keyboard();
+
+
 class O2Meter {
   constructor() {
     this.MAX_O2 = 1000;
