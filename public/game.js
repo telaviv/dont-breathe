@@ -66,6 +66,15 @@ class Plant {
 }
 
 class Character {
+  constructor() {
+    this.velocity = 32;
+    this.position = {x: 500, y: 500};
+  }
+
+  update(dt) {
+
+  }
+
   draw() {
     const graphics = new PIXI.Graphics();
     graphics.beginFill(RED);
@@ -75,6 +84,9 @@ class Character {
     graphics.beginFill(BLACK);
     graphics.drawRect(12, 8, 8, 8);
     graphics.endFill();
+
+    graphics.x = this.position.x;
+    graphics.y = this.position.y;
 
     return graphics;
   }
@@ -100,8 +112,6 @@ class GameScene {
     plantSprite.x = 300;
     plantSprite.y = 300;
     const characterSprite = this.character.draw();
-    characterSprite.x = 500;
-    characterSprite.y = 500;
 
     stage.addChild(o2sprite);
     stage.addChild(plantSprite);
