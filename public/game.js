@@ -88,6 +88,10 @@ class O2Meter {
 }
 
 class Plant {
+  constructor() {
+    this.o2Generation = 0.25;
+  }
+
   draw() {
     const graphics = new PIXI.Graphics();
     graphics.lineStyle(4, GREEN, 1);
@@ -205,9 +209,9 @@ class GameScene {
 class Plants {
   constructor() {
     this.grid = [];
-    for (let x = 0; x < ROWS; ++x) {
+    for (let x = 0; x < COLUMNS; ++x) {
       const row = []
-      for (let y = 0; y < COLUMNS; ++y) {
+      for (let y = 0; y < ROWS; ++y) {
         row.push(null) ;
       }
       this.grid.push(row);
@@ -220,10 +224,22 @@ class Plants {
     this.grid[x][y] = new Plant();
   }
 
+  o2GenerationRate() {
+    let sum = 0;
+    for (let x = 0; x < COLUMNS; ++x) {
+      for (let y = 0; y < ROWS; ++y) {
+        if (this.grid[x][y] !== null) {
+          sum += this.grid[x][y].o2Generation;
+        }
+      }
+    }
+    return sum;
+  }
+
   draw() {
     const scene = new PIXI.Container();
-    for (let x = 0; x < ROWS; ++x) {
-      for (let y = 0; y < COLUMNS; ++y) {
+    for (let x = 0; x < COLUMNS; ++x) {
+      for (let y = 0; y < ROWS; ++y) {
         if (this.grid[x][y] !== null) {
           const sprite = this.grid[x][y].draw();
           sprite.x = x * BLOCK_SIZE;
@@ -256,7 +272,10 @@ class Stage {
 
   update(dt) {
     this.character.update(dt);
-    this.oxygen -= dt * this.character.o2Consumption;
+    this.oxygen = Math.max(
+      0,
+      this.oxygen + dt * (this.plants.o2GenerationRate() - this.character.o2Consumption)
+    );
   }
 
   onKeyDown(keyCode) {
