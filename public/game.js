@@ -183,7 +183,7 @@ class Plants {
       }
       this.grid.push(row);
     }
-    this.grid[0][0] = new Plant();
+    this.grid[10][10] = new Plant();
   }
 
   draw() {
