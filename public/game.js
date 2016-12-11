@@ -71,34 +71,51 @@ class Plant {
 
 class Character {
   constructor() {
-    this.velocity = 150;
+    this.keyDirections = {
+      'ArrowUp': {x: 0, y: -1},
+      'ArrowDown': {x: 0, y: 1},
+      'ArrowLeft': {x: -1, y: 0},
+      'ArrowRight': {x: 1, y: 0},
+    }
+
+    this.movementDelay = 0.25;
+    this.moveCode = null;
+    this.timeSinceLastMovement = 0;
     this.position = {x: 500, y: 500};
   }
 
   update(dt) {
-    const direction = this.findDirectionVector();
-    const diffVector = this.scalarMultiply(direction, this.velocity * dt);
+    this.moveCode = this.findMoveCode();
+
+    if (this.timeSinceLastMovement < this.movementDelay || this.moveCode === null) {
+      this.timeSinceLastMovement += dt;
+      return;
+    }
+
+    const direction = this.directionVector();
+    const diffVector = this.scalarMultiply(direction, BLOCK_SIZE);
     this.position = this.addVectors(this.position, diffVector);
+    this.timeSinceLastMovement = 0;
   }
 
-  findDirectionVector() {
-    const keyDirections = [
-      {code: 'ArrowUp', direction: {x: 0, y: -1}},
-      {code: 'ArrowDown', direction: {x: 0, y: 1}},
-      {code: 'ArrowLeft', direction: {x: -1, y: 0}},
-      {code: 'ArrowRight', direction: {x: 1, y: 0}},
-    ]
-    let directionSum = {x: 0, y: 0};
+  findMoveCode() {
+    if (this.moveCode !== null && keyboard.keys.has(this.moveCode)) {
+      return this.moveCode;
+    }
 
-    for (let keyDirection of keyDirections) {
-      if (keyboard.keys.has(keyDirection.code)) {
-        directionSum = this.addVectors(directionSum, keyDirection.direction);
+    for (let moveCode of Object.keys(this.keyDirections)) {
+      if (keyboard.keys.has(moveCode)) {
+        return moveCode;
       }
     }
-    if (directionSum.x !== 0 && directionSum.y !== 0) {
-      directionSum = this.normalizeVector(directionSum);
+    return null;
+  }
+
+  directionVector() {
+    if (this.moveCode === null) {
+      return {x: 0, y: 0};
     }
-    return directionSum;
+    return this.keyDirections[this.moveCode];
   }
 
   clampedPosition() {
@@ -135,8 +152,9 @@ class Character {
     graphics.drawRect(12, 8, 8, 8);
     graphics.endFill();
 
-    graphics.x = this.position.x;
-    graphics.y = this.position.y;
+    const clampedPos = this.clampedPosition();
+    graphics.x = clampedPos.x;
+    graphics.y = clampedPos.y;
 
     return graphics;
   }
@@ -186,13 +204,6 @@ class Stage {
     this.character.update(dt);
   }
 
-  gridPosition() {
-    return {
-      x: clampPosition(this.character.position.x),
-      y: clampPosition(this.character.position.y),
-    };
-  }
-
   drawBackground() {
     const graphics = new PIXI.Graphics();
     graphics.beginFill(0x7E6B8F);
@@ -217,12 +228,12 @@ class Stage {
     const characterSprite = this.character.draw();
 
     stage.addChild(this.drawBackground());
-    stage.addChild(this.drawGridGuide());
     stage.addChild(plantSprite);
     stage.addChild(characterSprite);
 
-    stage.x = 500 - this.character.position.x;
-    stage.y = 350 - this.character.position.y;
+    const clampedPos = this.character.clampedPosition();
+    stage.x = 500 - clampedPos.x;
+    stage.y = 350 - clampedPos.y;
     return stage;
   }
 }
