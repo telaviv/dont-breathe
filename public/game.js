@@ -3,6 +3,8 @@ const RED = 0xFF3300;
 const BLUE = 0x66CCFF;
 const BLACK = 0X000000;
 const BLOCK_SIZE = 32;
+const COLUMNS = 32;
+const ROWS = 24;
 
 class Keyboard {
   constructor() {
@@ -171,11 +173,40 @@ class GameScene {
   }
 }
 
+class Plants {
+  constructor() {
+    this.grid = [];
+    for (let x = 0; x < ROWS; ++x) {
+      const row = []
+      for (let y = 0; y < COLUMNS; ++y) {
+        row.push(null) ;
+      }
+      this.grid.push(row);
+    }
+    this.grid[10][10] = new Plant();
+  }
+
+  draw() {
+    const scene = new PIXI.Container();
+    for (let x = 0; x < ROWS; ++x) {
+      for (let y = 0; y < COLUMNS; ++y) {
+        if (this.grid[x][y] !== null) {
+          const sprite = this.grid[x][y].draw();
+          sprite.x = x * BLOCK_SIZE;
+          sprite.y = y * BLOCK_SIZE;
+          scene.addChild(sprite);
+        }
+      }
+    }
+    return scene;
+  }
+}
+
 class Stage {
   constructor() {
     this.columns = 32;
     this.rows = 24;
-    this.plant = new Plant();
+    this.plants = new Plants();
     this.character = new Character();
   }
 
@@ -202,13 +233,11 @@ class Stage {
 
   draw() {
     const stage = new PIXI.Container();
-    const plantSprite = this.plant.draw();
-    plantSprite.x = 300;
-    plantSprite.y = 300;
+    const plantsSprite = this.plants.draw();
     const characterSprite = this.character.draw();
 
     stage.addChild(this.drawBackground());
-    stage.addChild(plantSprite);
+    stage.addChild(plantsSprite);
     stage.addChild(characterSprite);
 
     stage.x = 500 - this.character.position.x;
