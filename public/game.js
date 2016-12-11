@@ -101,6 +101,17 @@ class Character {
     return directionSum;
   }
 
+  clampedPosition() {
+    return {
+      x: this.clampPosition(this.position.x),
+      y: this.clampPosition(this.position.y),
+    };
+  }
+
+  clampPosition(dim) {
+    return Math.floor((dim + 0.5 * BLOCK_SIZE) / BLOCK_SIZE) * BLOCK_SIZE;
+  }
+
   addVectors(a, b) {
     return {x: a.x + b.x, y: a.y + b.y};
   }
@@ -176,9 +187,6 @@ class Stage {
   }
 
   gridPosition() {
-    const clampPosition = (dim) => {
-      return Math.floor((dim + 0.5 * BLOCK_SIZE) / BLOCK_SIZE) * BLOCK_SIZE;
-    }
     return {
       x: clampPosition(this.character.position.x),
       y: clampPosition(this.character.position.y),
@@ -194,7 +202,7 @@ class Stage {
   }
 
   drawGridGuide() {
-    const position = this.gridPosition();
+    const position = this.character.clampedPosition();
     const graphics = new PIXI.Graphics();
     graphics.lineStyle(4, BLUE, 0.15);
     graphics.drawRect(position.x, position.y, BLOCK_SIZE, BLOCK_SIZE);
