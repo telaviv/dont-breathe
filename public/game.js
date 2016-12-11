@@ -129,27 +129,45 @@ class Character {
 
 class GameScene {
   constructor() {
+    this.stage = new Stage();
     this.o2meter = new O2Meter();
+  }
+
+  update(dt) {
+    this.stage.update(dt);
+    this.o2meter.update(dt);
+  }
+
+  draw() {
+    const scene = new PIXI.Container();
+    const stageSprite = this.stage.draw();
+    const o2sprite = this.o2meter.draw();
+    o2sprite.x = 100;
+    o2sprite.y = 100;
+
+    scene.addChild(stageSprite);
+    scene.addChild(o2sprite);
+    return scene;
+  }
+}
+
+class Stage {
+  constructor() {
     this.plant = new Plant();
     this.character = new Character();
   }
 
   update(dt) {
-    this.o2meter.update(dt);
     this.character.update(dt);
   }
 
   draw() {
     const stage = new PIXI.Container();
-    const o2sprite = this.o2meter.draw();
-    o2sprite.x = 100;
-    o2sprite.y = 100;
     const plantSprite = this.plant.draw();
     plantSprite.x = 300;
     plantSprite.y = 300;
     const characterSprite = this.character.draw();
 
-    stage.addChild(o2sprite);
     stage.addChild(plantSprite);
     stage.addChild(characterSprite);
     return stage;
