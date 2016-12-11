@@ -5,6 +5,16 @@ const BLACK = 0X000000;
 const BLOCK_SIZE = 32;
 const COLUMNS = 32;
 const ROWS = 24;
+const MAX_O2 = 1000;
+
+const clamp = (value, min, max) => {
+  if (value > max) {
+    return max;
+  } else if (value < min) {
+    return  min;
+  }
+  return value;
+}
 
 class EventQueue {
   constructor() {
@@ -60,14 +70,13 @@ const keyboard = new Keyboard();
 
 class O2Meter {
   constructor() {
-    this.MAX_O2 = 1000;
     this.oxygen = 750;
   }
 
   draw() {
     const rectangle = new PIXI.Graphics();
     const meterHeight = 64 * 6;
-    const oxygenHeight = meterHeight - meterHeight * this.oxygen / this.MAX_O2;
+    const oxygenHeight = meterHeight - meterHeight * this.oxygen / MAX_O2;
 
     // draw the outside meter
     rectangle.lineStyle(4, RED, 1);
@@ -272,10 +281,8 @@ class Stage {
 
   update(dt) {
     this.character.update(dt);
-    this.oxygen = Math.max(
-      0,
-      this.oxygen + dt * (this.plants.o2GenerationRate() - this.character.o2Consumption)
-    );
+    const d02 = dt * (this.plants.o2GenerationRate() - this.character.o2Consumption);
+    this.oxygen = clamp(this.oxygen + d02, 0, MAX_O2);
   }
 
   onKeyDown(keyCode) {
