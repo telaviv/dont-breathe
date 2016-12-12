@@ -49,7 +49,7 @@ class EventQueue {
     this.queue = [];
   }
 }
-const eventQueue = new EventQueue();
+const mainEventQueue = new EventQueue();
 
 class Keyboard {
   constructor() {
@@ -60,7 +60,7 @@ class Keyboard {
 
   onDown(event) {
     this.keys.add(event.code);
-    eventQueue.enqueue('keydown', event.code);
+    mainEventQueue.enqueue('keydown', event.code);
   }
 
   onUp(event) {
@@ -329,7 +329,7 @@ class Stage {
     this.character = new Character();
     this.oxygen = 750;
     this.statusMessage = '';
-    eventQueue.listen('keydown', this.onKeyDown.bind(this));
+    mainEventQueue.listen('keydown', this.onKeyDown.bind(this));
   }
 
   get width() {
@@ -390,7 +390,7 @@ class GameRunner {
   }
 
   update(dt) {
-    eventQueue.clearQueue();
+    mainEventQueue.clearQueue();
     this.gameScene.update(dt);
     this.renderer.render(this.gameScene.draw());
   }
