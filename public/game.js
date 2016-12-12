@@ -77,7 +77,7 @@ const modalKeyboard = new Keyboard(modalEventQueue);
 
 class TextBox {
   constructor(eventQueue) {
-    this.text = '';
+    this.text = [];
     eventQueue.listen('keydown', this.onKeyDown.bind(this));
   }
 
@@ -262,7 +262,7 @@ class GameScene {
   update(dt) {
     this.stage.update(dt);
     this.o2meter.oxygen = this.stage.oxygen;
-    this.textBox.text = this.stage.statusMessage;
+    this.textBox.text = [this.stage.statusMessage];
   }
 
   draw() {
@@ -280,7 +280,7 @@ class ModalScene {
   }
 
   update(dt) {
-    this.textBox.text = 'modal dialog';
+    this.textBox.text = ['modal dialog'];
   }
 
   draw() {
@@ -360,7 +360,7 @@ class Stage {
     this.plants = new Plants();
     this.character = new Character();
     this.oxygen = 750;
-    this.statusMessage = '';
+    this.statusMessage = [];
     mainEventQueue.listen('keydown', this.onKeyDown.bind(this));
   }
 
@@ -382,7 +382,7 @@ class Stage {
     if (this.plants.hasPlant(playerPosition)) {
       this.statusMessage = this.plants.plantStatus(playerPosition);
     } else {
-      this.statusMessage = '';
+      this.statusMessage = [];
     }
   }
 
