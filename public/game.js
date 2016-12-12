@@ -42,14 +42,19 @@ class EventQueue {
     }
   }
 
-  clearQueue() {
+  executeQueue() {
     for (let thunk of this.queue) {
       thunk();
     }
     this.queue = [];
   }
+
+  clearQueue() {
+    this.queue = [];
+  }
 }
 const mainEventQueue = new EventQueue();
+const modalEventQueue = new EventQueue();
 
 class Keyboard {
   constructor() {
@@ -67,11 +72,17 @@ class Keyboard {
     this.keys.delete(event.code);
   }
 }
-const keyboard = new Keyboard();
+const keyboard = new Keyboard(mainEventQueue);
+const modalKeyboard = new Keyboard(modalEventQueue);
 
 class TextBox {
-  constructor() {
+  constructor(eventQueue) {
     this.text = '';
+    eventQueue.listen('keydown', this.onKeyDown.bind(this));
+  }
+
+  onKeyDown() {
+    console.log('text keydown!');
   }
 
   draw() {
@@ -245,7 +256,7 @@ class GameScene {
   constructor() {
     this.stage = new Stage();
     this.o2meter = new O2Meter();
-    this.textBox = new TextBox();
+    this.textBox = new TextBox(mainEventQueue);
   }
 
   update(dt) {
@@ -260,6 +271,27 @@ class GameScene {
     scene.addChild(this.o2meter.draw());
     scene.addChild(this.textBox.draw());
     return scene;
+  }
+}
+
+class ModalScene {
+  constructor() {
+    this.textBox = new TextBox(modalEventQueue);
+  }
+
+  update(dt) {
+    this.textBox.text = 'modal dialog';
+  }
+
+  draw() {
+    const graphics = new PIXI.Graphics();
+    graphics.beginFill(BLACK, 0.5);
+    graphics.drawRect(0, 0, BLOCK_SIZE * COLUMNS, BLOCK_SIZE * ROWS);
+    graphics.endFill();
+
+    graphics.addChild(this.textBox.draw());
+
+    return graphics;
   }
 }
 
@@ -386,13 +418,29 @@ class Stage {
 class GameRunner {
   constructor() {
     this.gameScene = new GameScene();
+    this.modalScene = new ModalScene()
+    this.showingModal = true;
     this.renderer = PIXI.autoDetectRenderer(1024, 768);
   }
 
   update(dt) {
-    mainEventQueue.clearQueue();
+    if (this.showingModal) {
+      this.updateModal(dt)
+      return;
+    }
+    mainGameQueue.executeQueue();
     this.gameScene.update(dt);
     this.renderer.render(this.gameScene.draw());
+  }
+
+  updateModal(dt) {
+    modalEventQueue.executeQueue();
+    this.modalScene.update(dt);
+
+    const scene = new PIXI.Container();
+    scene.addChild(this.gameScene.draw());
+    scene.addChild(this.modalScene.draw());
+    this.renderer.render(scene);
   }
 
   run() {
