@@ -57,15 +57,16 @@ const mainEventQueue = new EventQueue();
 const modalEventQueue = new EventQueue();
 
 class Keyboard {
-  constructor() {
+  constructor(eventQueue) {
     this.keys = new Set([]);
+    this.eventQueue = eventQueue;
     addEventListener('keydown', this.onDown.bind(this));
     addEventListener('keyup', this.onUp.bind(this));
   }
 
   onDown(event) {
     this.keys.add(event.code);
-    mainEventQueue.enqueue('keydown', event.code);
+    this.eventQueue.enqueue('keydown', event.code);
   }
 
   onUp(event) {
@@ -82,11 +83,11 @@ class TextBox {
   }
 
   onKeyDown() {
-    console.log('text keydown!');
+    this.text.shift();
   }
 
   draw() {
-    if (this.text === '') {
+    if (this.text === []) {
       return new PIXI.Graphics();
     }
 
@@ -104,7 +105,7 @@ class TextBox {
 
     // now draw the text
     const text = new PIXI.Text(
-      this.text, {
+      this.text[0], {
         fontFamily : 'verdana',
         fontSize: 24,
         fontWeight: 'bold',
@@ -277,11 +278,14 @@ class GameScene {
 class ModalScene {
   constructor() {
     this.textBox = new TextBox(modalEventQueue);
+    this.textBox.text = [
+      'this is ... ',
+      'a modal dialog',
+    ];
+
   }
 
-  update(dt) {
-    this.textBox.text = ['modal dialog'];
-  }
+  update(dt) {}
 
   draw() {
     const graphics = new PIXI.Graphics();
