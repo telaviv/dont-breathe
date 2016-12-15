@@ -55,6 +55,7 @@ class EventQueue {
 }
 const mainEventQueue = new EventQueue();
 const modalEventQueue = new EventQueue();
+const sceneQueue = new EventQueue();
 
 class Keyboard {
   constructor(eventQueue) {
@@ -79,11 +80,15 @@ const modalKeyboard = new Keyboard(modalEventQueue);
 class TextBox {
   constructor(eventQueue) {
     this.text = [];
-    eventQueue.listen('keydown', this.onKeyDown.bind(this));
+    this.eventQueue = eventQueue;
+    this.eventQueue.listen('keydown', this.onKeyDown.bind(this));
   }
 
   onKeyDown() {
     this.text.shift();
+    if (this.text.length === 0) {
+      this.eventQueue.enqueue('text-box-finished');
+    }
   }
 
   draw() {
@@ -282,10 +287,14 @@ class ModalScene {
       'this is ... ',
       'a modal dialog',
     ];
-
+    modalEventQueue.listen('text-box-finished', this.onFinishedTextBox.bind(this));
   }
 
   update(dt) {}
+
+  onFinishedTextBox() {
+    sceneQueue.enqueue('modal-finished');
+  }
 
   draw() {
     const graphics = new PIXI.Graphics();
@@ -425,9 +434,12 @@ class GameRunner {
     this.modalScene = new ModalScene()
     this.showingModal = true;
     this.renderer = PIXI.autoDetectRenderer(1024, 768);
+    sceneQueue.listen('modal-finished', this.onModalFinished.bind(this));
   }
 
   update(dt) {
+    sceneQueue.executeQueue();
+
     if (this.showingModal) {
       this.updateModal(dt)
       return;
@@ -445,6 +457,10 @@ class GameRunner {
     scene.addChild(this.gameScene.draw());
     scene.addChild(this.modalScene.draw());
     this.renderer.render(scene);
+  }
+
+  onModalFinished() {
+    console.log('modal finished');
   }
 
   run() {
