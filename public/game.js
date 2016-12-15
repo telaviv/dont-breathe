@@ -444,7 +444,7 @@ class GameRunner {
       this.updateModal(dt)
       return;
     }
-    mainGameQueue.executeQueue();
+    mainEventQueue.executeQueue();
     this.gameScene.update(dt);
     this.renderer.render(this.gameScene.draw());
   }
@@ -460,7 +460,8 @@ class GameRunner {
   }
 
   onModalFinished() {
-    console.log('modal finished');
+    mainEventQueue.clearQueue()
+    this.showingModal = false;
   }
 
   run() {
