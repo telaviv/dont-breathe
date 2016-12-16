@@ -284,8 +284,21 @@ class ModalScene {
   constructor() {
     this.textBox = new TextBox(modalEventQueue);
     this.textBox.text = [
-      'this is ... ',
-      'a modal dialog',
+      '[ press any key ] ',
+      ' ... ... ',
+      '.........',
+      ' just ... ',
+      '... ...',
+      '.........',
+      'breathe.',
+      '',
+      "I don't have much oxygen left.",
+      "but ...",
+      'I still need to breathe.',
+      '',
+      "...",
+      "Let's keep calm.",
+      "We still have a few seeds left.",
     ];
     modalEventQueue.listen('text-box-finished', this.onFinishedTextBox.bind(this));
   }
