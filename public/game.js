@@ -18,6 +18,26 @@ const clamp = (value, min, max) => {
   return value;
 }
 
+class LERP {
+  constructor(time, drawCB) {
+    this.dt = 0;
+    this.totalTime = time;
+    this.drawCB = drawCB;
+    this.isFinished = false;
+  }
+
+  update(dt) {
+    this.dt += dt;
+    if (this.dt >= this.totalTime) {
+      this.isFinished = true;
+    }
+  }
+
+  draw() {
+    return this.drawCB(Math.min(1, this.dt / this.totalTime));
+  }
+}
+
 class EventQueue {
   constructor() {
     this.listeners = {};
@@ -296,22 +316,35 @@ class ModalScene {
       "but ...",
       'I still need to breathe.',
       '',
-      "...",
+      '',
       "Let's keep calm.",
       "We still have a few seeds left.",
     ];
+    this.fadeInAnimation = new LERP(10, this.drawOverlay.bind(this));
+    this.fadingIn = false;
     modalEventQueue.listen('text-box-finished', this.onFinishedTextBox.bind(this));
   }
 
-  update(dt) {}
+  update(dt) {
+    if (this.fadeInAnimation.isFinished) {
+      sceneQueue.enqueue('modal-finished');
+    }
+    if (this.fadingIn) {
+      this.fadeInAnimation.update(dt);
+    }
+  }
 
   onFinishedTextBox() {
-    sceneQueue.enqueue('modal-finished');
+    this.fadingIn = true;
   }
 
   draw() {
+    return this.fadeInAnimation.draw();
+  }
+
+  drawOverlay(lerpValue) {
     const graphics = new PIXI.Graphics();
-    graphics.beginFill(BLACK, 1);
+    graphics.beginFill(BLACK, 1 - lerpValue);
     graphics.drawRect(0, 0, BLOCK_SIZE * COLUMNS, BLOCK_SIZE * ROWS);
     graphics.endFill();
 
