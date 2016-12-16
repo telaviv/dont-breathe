@@ -100,6 +100,7 @@ const modalKeyboard = new Keyboard(modalEventQueue);
 class TextBox {
   constructor(eventQueue) {
     this.text = [];
+    this.hidden = true;
     this.eventQueue = eventQueue;
     this.eventQueue.listen('keydown', this.onKeyDown.bind(this));
   }
@@ -107,12 +108,25 @@ class TextBox {
   onKeyDown() {
     this.text.shift();
     if (this.text.length === 0) {
+      this.hidden = true;
       this.eventQueue.enqueue('text-box-finished');
     }
   }
 
+  displayText(text) {
+    if(!Array.isArray(text)) {
+      text = [text];
+    }
+    this.text = text;
+    this.hidden = false;
+  }
+
+  hide() {
+    this.hidden = true;
+  }
+
   draw() {
-    if (this.text === []) {
+    if (this.hidden) {
       return new PIXI.Graphics();
     }
 
@@ -288,7 +302,11 @@ class GameScene {
   update(dt) {
     this.stage.update(dt);
     this.o2meter.oxygen = this.stage.oxygen;
-    this.textBox.text = [this.stage.statusMessage];
+    if (this.stage.statusMessage) {
+      this.textBox.text.displayText(this.stage.statusMessage);
+    } else {
+      this.textBox.hide();
+    }
   }
 
   draw() {
@@ -303,7 +321,7 @@ class GameScene {
 class ModalScene {
   constructor() {
     this.textBox = new TextBox(modalEventQueue);
-    this.textBox.text = [
+    this.textBox.displayText([
       '[ press any key ] ',
       ' ... ... ',
       '.........',
@@ -319,7 +337,7 @@ class ModalScene {
       '......',
       "Let's keep calm.",
       "We still have a few seeds left.",
-    ];
+    ]);
     this.fadeInAnimation = new LERP(8, this.drawOverlay.bind(this));
     this.fadingIn = false;
     modalEventQueue.listen('text-box-finished', this.onFinishedTextBox.bind(this));
@@ -419,7 +437,7 @@ class Stage {
     this.plants = new Plants();
     this.character = new Character();
     this.oxygen = 750;
-    this.statusMessage = [];
+    this.statusMessage = '';
     mainEventQueue.listen('keydown', this.onKeyDown.bind(this));
   }
 
@@ -441,7 +459,7 @@ class Stage {
     if (this.plants.hasPlant(playerPosition)) {
       this.statusMessage = this.plants.plantStatus(playerPosition);
     } else {
-      this.statusMessage = [];
+      this.statusMessage = '';
     }
   }
 
