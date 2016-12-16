@@ -311,7 +311,7 @@ class ModalScene {
 
   draw() {
     const graphics = new PIXI.Graphics();
-    graphics.beginFill(BLACK, 0.5);
+    graphics.beginFill(BLACK, 1);
     graphics.drawRect(0, 0, BLOCK_SIZE * COLUMNS, BLOCK_SIZE * ROWS);
     graphics.endFill();
 
