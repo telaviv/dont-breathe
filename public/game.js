@@ -316,11 +316,11 @@ class ModalScene {
       "but ...",
       'I still need to breathe.',
       '',
-      '',
+      '......',
       "Let's keep calm.",
       "We still have a few seeds left.",
     ];
-    this.fadeInAnimation = new LERP(10, this.drawOverlay.bind(this));
+    this.fadeInAnimation = new LERP(8, this.drawOverlay.bind(this));
     this.fadingIn = false;
     modalEventQueue.listen('text-box-finished', this.onFinishedTextBox.bind(this));
   }
