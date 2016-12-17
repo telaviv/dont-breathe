@@ -252,7 +252,8 @@ class Character {
 
     const direction = this.directionVector();
     const diffVector = this.scalarMultiply(direction, BLOCK_SIZE);
-    this.position = this.addVectors(this.position, diffVector);
+    const addedPosition = this.addVectors(this.position, diffVector);
+    this.position = this.clampPosition(addedPosition);
     this.timeSinceLastMovement = 0;
   }
 
@@ -282,6 +283,13 @@ class Character {
 
   scalarMultiply(v, scale) {
     return {x: v.x * scale, y: v.y * scale};
+  }
+
+  clampPosition(position) {
+    return {
+      x: clamp(position.x, 0, BLOCK_SIZE * (COLUMNS - 1)),
+      y: clamp(position.y, 0, BLOCK_SIZE * (ROWS - 1)),
+    }
   }
 
   get gridPosition() {
