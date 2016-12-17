@@ -101,6 +101,7 @@ class TextBox {
   constructor(eventQueue) {
     this.text = [];
     this.hidden = true;
+    this.resolve = () => {};
     this.eventQueue = eventQueue;
     this.eventQueue.listen('keydown', this.onKeyDown.bind(this));
   }
@@ -109,6 +110,7 @@ class TextBox {
     this.text.shift();
     if (this.text.length === 0) {
       this.hidden = true;
+      this.resolve();
       this.eventQueue.enqueue('text-box-finished');
     }
   }
@@ -119,6 +121,9 @@ class TextBox {
     }
     this.text = text;
     this.hidden = false;
+    return new Promise((resolve) => {
+      this.resolve = resolve;
+    })
   }
 
   hide() {
@@ -320,6 +325,8 @@ class GameScene {
 
 class ModalScene {
   constructor() {
+    this.fadeInAnimation = new LERP(8, this.drawOverlay.bind(this));
+    this.fadingIn = false;
     this.textBox = new TextBox(modalEventQueue);
     this.textBox.displayText([
       '[ press any key ] ',
@@ -337,10 +344,7 @@ class ModalScene {
       '......',
       "Let's keep calm.",
       "We still have a few seeds left.",
-    ]);
-    this.fadeInAnimation = new LERP(8, this.drawOverlay.bind(this));
-    this.fadingIn = false;
-    modalEventQueue.listen('text-box-finished', this.onFinishedTextBox.bind(this));
+    ]).then(this.onFinishedTextBox.bind(this));
   }
 
   update(dt) {
