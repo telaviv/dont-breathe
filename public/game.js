@@ -106,34 +106,47 @@ class Keyboard {
   }
 }
 const keyboard = new Keyboard(mainEventQueue);
-const modalKeyboard = new Keyboard(modalEventQueue);
 
-class TextBox {
-  constructor(eventQueue) {
-    this.text = [];
-    this.hidden = true;
-    this.resolve = () => {};
-    this.eventQueue = eventQueue;
-    this.eventQueue.listen('keydown', this.onKeyDown.bind(this));
+class AsyncKeyboard {
+
+  constructor() {
+    this.listening = false;
+    addEventListener('keydown', this.onKeyDown.bind(this));
   }
 
-  onKeyDown() {
-    this.text.shift();
-    if (this.text.length === 0) {
-      this.hidden = true;
-      this.resolve();
+  nextKey() {
+    this.listening = true;
+    return new Promise((resolve) => {
+      this.resolve = resolve
+    })
+  }
+
+  onKeyDown(event) {
+    if (this.listening) {
+      this.listening = false;
+      this.resolve(event.code);
     }
   }
+}
 
-  displayText(text) {
+class TextBox {
+  constructor() {
+    this.text = [];
+    this.hidden = true;
+  }
+
+  async displayText(text) {
     if(!Array.isArray(text)) {
       text = [text];
     }
-    this.text = text;
+
     this.hidden = false;
-    return new Promise((resolve) => {
-      this.resolve = resolve;
-    })
+    const keyboard = new AsyncKeyboard();
+    for (let message of text) {
+      this.message = message;
+      await keyboard.nextKey();
+    }
+    this.hidden = true;
   }
 
   hide() {
@@ -159,7 +172,7 @@ class TextBox {
 
     // now draw the text
     const text = new PIXI.Text(
-      this.text[0], {
+      this.message, {
         fontFamily : 'verdana',
         fontSize: 24,
         fontWeight: 'bold',
