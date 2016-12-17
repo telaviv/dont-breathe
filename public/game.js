@@ -122,7 +122,6 @@ class TextBox {
     if (this.text.length === 0) {
       this.hidden = true;
       this.resolve();
-      this.eventQueue.enqueue('text-box-finished');
     }
   }
 
@@ -366,7 +365,12 @@ class ModalScene {
       "We still have a few seeds left.",
     ])
         .then(this.fadeInAnimation.start.bind(this.fadeInAnimation))
+        .then(this.pressToPlant.bind(this))
         .then(() => {sceneQueue.enqueue('modal-finished');});
+  }
+
+  pressToPlant() {
+    return this.textBox.displayText("[ press 'P' to plant a seed ]");
   }
 
   update(dt) {
