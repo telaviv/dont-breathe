@@ -19,22 +19,33 @@ const clamp = (value, min, max) => {
 }
 
 class LERP {
-  constructor(time, drawCB) {
+  constructor(time, drawCb) {
     this.dt = 0;
     this.totalTime = time;
-    this.drawCB = drawCB;
-    this.isFinished = false;
+    this.drawCb = drawCb;
+    this.started = false;
+  }
+
+  start() {
+    this.started = true;
+    return new Promise((resolve) => {
+      this.resolve = resolve;
+    });
   }
 
   update(dt) {
-    this.dt += dt;
-    if (this.dt >= this.totalTime) {
-      this.isFinished = true;
+    if (!this.started) {
+      return;
     }
+
+    if (this.dt >= this.totalTime) {
+      this.resolve();
+    }
+    this.dt += dt;
   }
 
   draw() {
-    return this.drawCB(Math.min(1, this.dt / this.totalTime));
+    return this.drawCb(Math.min(1, this.dt / this.totalTime));
   }
 }
 
@@ -308,7 +319,7 @@ class GameScene {
     this.stage.update(dt);
     this.o2meter.oxygen = this.stage.oxygen;
     if (this.stage.statusMessage) {
-      this.textBox.text.displayText(this.stage.statusMessage);
+      this.textBox.displayText(this.stage.statusMessage);
     } else {
       this.textBox.hide();
     }
@@ -328,6 +339,7 @@ class ModalScene {
     this.fadeInAnimation = new LERP(8, this.drawOverlay.bind(this));
     this.fadingIn = false;
     this.textBox = new TextBox(modalEventQueue);
+
     this.textBox.displayText([
       '[ press any key ] ',
       ' ... ... ',
@@ -344,20 +356,13 @@ class ModalScene {
       '......',
       "Let's keep calm.",
       "We still have a few seeds left.",
-    ]).then(this.onFinishedTextBox.bind(this));
+    ])
+        .then(this.fadeInAnimation.start.bind(this.fadeInAnimation))
+        .then(() => {sceneQueue.enqueue('modal-finished');});
   }
 
   update(dt) {
-    if (this.fadeInAnimation.isFinished) {
-      sceneQueue.enqueue('modal-finished');
-    }
-    if (this.fadingIn) {
-      this.fadeInAnimation.update(dt);
-    }
-  }
-
-  onFinishedTextBox() {
-    this.fadingIn = true;
+    this.fadeInAnimation.update(dt);
   }
 
   draw() {
