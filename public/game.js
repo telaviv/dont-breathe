@@ -365,12 +365,8 @@ class ModalScene {
       "We still have a few seeds left.",
     ])
         .then(this.fadeInAnimation.start.bind(this.fadeInAnimation))
-        .then(this.pressToPlant.bind(this))
+        .then(() => {return this.textBox.displayText("[ press 'P' to plant a seed ]")})
         .then(() => {sceneQueue.enqueue('modal-finished');});
-  }
-
-  pressToPlant() {
-    return this.textBox.displayText("[ press 'P' to plant a seed ]");
   }
 
   update(dt) {
