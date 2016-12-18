@@ -360,7 +360,10 @@ class ModalScene {
     this.fadingIn = false;
     this.textBox = new TextBox(modalEventQueue);
 
-    this.textBox.displayText([
+  }
+
+  async start() {
+    await this.textBox.displayText([
       '[ press any key ] ',
       ' ... ... ',
       '.........',
@@ -377,9 +380,9 @@ class ModalScene {
       "Let's keep calm.",
       "We still have a few seeds left.",
     ])
-        .then(this.fadeInAnimation.start.bind(this.fadeInAnimation))
-        .then(() => {return this.textBox.displayText("[ press 'P' to plant a seed ]")})
-        .then(() => {sceneQueue.enqueue('modal-finished');});
+    await this.fadeInAnimation.start();
+    await this.textBox.displayText("[ press 'P' to plant a seed ]");
+    sceneQueue.enqueue('modal-finished');
   }
 
   update(dt) {
@@ -529,6 +532,7 @@ class GameRunner {
     this.showingModal = true;
     this.renderer = PIXI.autoDetectRenderer(1024, 768);
     sceneQueue.listen('modal-finished', this.onModalFinished.bind(this));
+    this.modalScene.start()
   }
 
   update(dt) {
