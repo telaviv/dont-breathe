@@ -85,7 +85,6 @@ class EventQueue {
   }
 }
 const mainEventQueue = new EventQueue();
-const modalEventQueue = new EventQueue();
 const sceneQueue = new EventQueue();
 
 class Keyboard {
@@ -332,7 +331,7 @@ class GameScene {
   constructor() {
     this.stage = new Stage();
     this.o2meter = new O2Meter();
-    this.textBox = new TextBox(mainEventQueue);
+    this.textBox = new TextBox();
   }
 
   update(dt) {
@@ -358,7 +357,7 @@ class ModalScene {
   constructor() {
     this.fadeInAnimation = new LERP(8, this.drawOverlay.bind(this));
     this.fadingIn = false;
-    this.textBox = new TextBox(modalEventQueue);
+    this.textBox = new TextBox();
 
   }
 
@@ -532,7 +531,7 @@ class GameRunner {
     this.showingModal = true;
     this.renderer = PIXI.autoDetectRenderer(1024, 768);
     sceneQueue.listen('modal-finished', this.onModalFinished.bind(this));
-    this.modalScene.start()
+    this.modalScene.start();
   }
 
   update(dt) {
@@ -548,7 +547,6 @@ class GameRunner {
   }
 
   updateModal(dt) {
-    modalEventQueue.executeQueue();
     this.modalScene.update(dt);
 
     const scene = new PIXI.Container();
