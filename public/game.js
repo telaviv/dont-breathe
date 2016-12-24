@@ -541,13 +541,17 @@ class Stage {
 }
 
 class GameRunner {
-  constructor() {
+  constructor(disableIntro=true) {
     this.gameScene = new GameScene();
     this.modalScene = new ModalScene()
-    this.showingModal = true;
     this.renderer = PIXI.autoDetectRenderer(1024, 768);
     sceneQueue.listen('modal-finished', this.onModalFinished.bind(this));
-    this.modalScene.start();
+    if (disableIntro) {
+      this.showingModal = false;
+    } else {
+      this.showingModal = true;
+      this.modalScene.start();
+    }
   }
 
   update(dt) {
