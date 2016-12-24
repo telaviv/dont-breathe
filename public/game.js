@@ -136,8 +136,8 @@ class SeedInventory {
 
   draw() {
     const sprite = new PIXI.Sprite(this.texture);
-    sprite.x = 0;
-    sprite.y = 0;
+    sprite.x = 900;
+    sprite.y = 50;
     return sprite;
   }
 }
@@ -186,7 +186,7 @@ class TextBox {
     // now draw the text
     const text = new PIXI.Text(
       this.message, {
-        fontFamily : 'verdana',
+        fontFamily : 'Verdana',
         fontSize: 24,
         fontWeight: 'bold',
         fill : WHITE,
