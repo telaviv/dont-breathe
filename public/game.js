@@ -2,6 +2,7 @@ const GREEN = 0x73fe00;
 const RED = 0xFF3300;
 const BLUE = 0x66CCFF;
 const BROWN = 0x4B5043;
+const CHOCOLATE = 0x663931;
 const WHITE = 0XFFFFFF;
 const BLACK = 0X000000;
 const BLOCK_SIZE = 32;
@@ -135,10 +136,31 @@ class SeedInventory {
   }
 
   draw() {
+    const container = new PIXI.Graphics();
+    // now draw the text
+    const text = new PIXI.Text(
+      `seeds (x${this.count})`, {
+        fontFamily : 'Verdana',
+        fontSize: 24,
+        fontWeight: 'bold',
+        fill : CHOCOLATE,
+        align : 'center',
+      }
+    );
+    text.anchor.set(0.5);
+    text.x = 32;
+    text.y = 80;
+
     const sprite = new PIXI.Sprite(this.texture);
-    sprite.x = 900;
-    sprite.y = 50;
-    return sprite;
+    sprite.x = 0;
+    sprite.y = 0;
+
+    container.addChild(text);
+    container.addChild(sprite);
+    container.x = 900;
+    container.y = 50;
+
+    return container;
   }
 }
 
