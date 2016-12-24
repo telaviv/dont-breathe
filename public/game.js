@@ -158,7 +158,7 @@ class SeedInventory {
     container.addChild(text);
     container.addChild(sprite);
     container.x = 900;
-    container.y = 50;
+    container.y = 25;
 
     return container;
   }
