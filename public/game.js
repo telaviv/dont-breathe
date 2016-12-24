@@ -128,6 +128,20 @@ class AsyncKeyboard {
   }
 }
 
+class SeedInventory {
+  constructor(count=5) {
+    this.count = count;
+    this.texture = PIXI.Texture.fromImage('seeds.png');
+  }
+
+  draw() {
+    const sprite = new PIXI.Sprite(this.texture);
+    sprite.x = 0;
+    sprite.y = 0;
+    return sprite;
+  }
+}
+
 class TextBox {
   constructor() {
     this.text = [];
@@ -330,6 +344,7 @@ class Character {
 class GameScene {
   constructor() {
     this.stage = new Stage();
+    this.seedInventory = new SeedInventory();
     this.o2meter = new O2Meter();
     this.textBox = new TextBox();
   }
@@ -347,6 +362,7 @@ class GameScene {
   draw() {
     const scene = new PIXI.Container();
     scene.addChild(this.stage.draw());
+    scene.addChild(this.seedInventory.draw());
     scene.addChild(this.o2meter.draw());
     scene.addChild(this.textBox.draw());
     return scene;
