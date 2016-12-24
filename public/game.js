@@ -139,11 +139,11 @@ class SeedInventory {
     const container = new PIXI.Graphics();
     // now draw the text
     const text = new PIXI.Text(
-      `seeds (x${this.count})`, {
-        fontFamily : 'Verdana',
+      `seeds (${this.count})`, {
+        fontFamily : 'Helvetica',
         fontSize: 24,
         fontWeight: 'bold',
-        fill : CHOCOLATE,
+        fill : WHITE,
         align : 'center',
       }
     );
