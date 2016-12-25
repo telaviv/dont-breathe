@@ -133,29 +133,29 @@ class SeedInventory {
   constructor(count=5) {
     this.count = count;
     this.texture = PIXI.Texture.fromImage('seeds.png');
+    this.text = new PIXI.Text();
   }
 
   draw() {
     const container = new PIXI.Graphics();
     // now draw the text
-    const text = new PIXI.Text(
-      `seeds (${this.count})`, {
-        fontFamily : 'Helvetica',
-        fontSize: 24,
-        fontWeight: 'bold',
-        fill : WHITE,
-        align : 'center',
-      }
-    );
-    text.anchor.set(0.5);
-    text.x = 32;
-    text.y = 80;
+    this.text.text = `seeds (${this.count})`
+    this.text.style = {
+      fontFamily : 'Helvetica',
+      fontSize: 24,
+      fontWeight: 'bold',
+      fill : WHITE,
+      align : 'center',
+    }
+    this.text.anchor.set(0.5);
+    this.text.x = 32;
+    this.text.y = 80;
 
     const sprite = new PIXI.Sprite(this.texture);
     sprite.x = 0;
     sprite.y = 0;
 
-    container.addChild(text);
+    container.addChild(this.text);
     container.addChild(sprite);
     container.x = 900;
     container.y = 25;
