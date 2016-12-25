@@ -10,6 +10,10 @@ const COLUMNS = 32;
 const ROWS = 24;
 const MAX_O2 = 1000;
 
+const inventory = {
+  seeds: 5,
+}
+
 const clamp = (value, min, max) => {
   if (value > max) {
     return max;
@@ -130,8 +134,7 @@ class AsyncKeyboard {
 }
 
 class SeedInventory {
-  constructor(count=5) {
-    this.count = count;
+  constructor() {
     this.texture = PIXI.Texture.fromImage('seeds.png');
     this.text = new PIXI.Text();
   }
@@ -139,14 +142,14 @@ class SeedInventory {
   draw() {
     const container = new PIXI.Graphics();
     // now draw the text
-    this.text.text = `seeds (${this.count})`
+    this.text.text = `seeds (${inventory.seeds})`;
     this.text.style = {
       fontFamily : 'Helvetica',
       fontSize: 24,
       fontWeight: 'bold',
       fill : WHITE,
       align : 'center',
-    }
+    };
     this.text.anchor.set(0.5);
     this.text.x = 32;
     this.text.y = 80;
@@ -536,6 +539,7 @@ class Stage {
   onKeyDown(keyCode) {
     if (keyCode === 'KeyP') {
       this.plants.addPlant(this.character.gridPosition);
+      inventory.seeds--;
     }
   }
 
