@@ -399,7 +399,6 @@ class ModalScene {
     this.fadeInAnimation = new LERP(8, this.drawOverlay.bind(this));
     this.fadingIn = false;
     this.textBox = new TextBox();
-
   }
 
   async start() {
@@ -444,6 +443,7 @@ class ModalScene {
     return graphics;
   }
 }
+
 
 class Plants {
   constructor() {
@@ -500,6 +500,38 @@ class Plants {
       }
     }
     return scene;
+  }
+}
+
+class Overlay {
+  constructor() {
+    this.opacity = 0.5;
+  }
+
+  draw() {
+    const graphics = new PIXI.Graphics();
+    graphics.beginFill(BLACK, this.opacity);
+    graphics.drawRect(0, 0, BLOCK_SIZE * COLUMNS, BLOCK_SIZE * ROWS);
+    graphics.endFill();
+    return graphics;
+  }
+}
+
+class SceneManager {
+  constructor() {
+    this.game = new GameScene();
+    this.overlay = new Overlay();
+  }
+
+  update(dt) {
+    this.game.update(dt);
+  }
+
+  draw() {
+    const container = new PIXI.Graphics();
+    container.addChild(this.game.draw());
+    container.addChild(this.overlay.draw());
+    return container;
   }
 }
 
@@ -582,7 +614,7 @@ class Stage {
 
 class GameRunner {
   constructor(disableIntro=true) {
-    this.gameScene = new GameScene();
+    this.gameScene = new SceneManager();
     this.modalScene = new ModalScene()
     this.renderer = new PIXI.WebGLRenderer(1024, 768);
     sceneQueue.listen('modal-finished', this.onModalFinished.bind(this));
