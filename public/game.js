@@ -566,7 +566,7 @@ class GameRunner {
   constructor(disableIntro=true) {
     this.gameScene = new GameScene();
     this.modalScene = new ModalScene()
-    this.renderer = PIXI.autoDetectRenderer(1024, 768);
+    this.renderer = new PIXI.WebGLRenderer(1024, 768);
     sceneQueue.listen('modal-finished', this.onModalFinished.bind(this));
     if (disableIntro) {
       this.showingModal = false;
