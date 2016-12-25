@@ -538,7 +538,7 @@ class Stage {
 
   onKeyDown(keyCode) {
     if (keyCode === 'KeyP') {
-      if (inventory.seeds > 0) {
+      if (inventory.seeds > 0 && !this.plants.hasPlant(this.character.gridPosition)) {
         this.plants.addPlant(this.character.gridPosition);
         inventory.seeds--;
       }
