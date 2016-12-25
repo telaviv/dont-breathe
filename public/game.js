@@ -538,8 +538,10 @@ class Stage {
 
   onKeyDown(keyCode) {
     if (keyCode === 'KeyP') {
-      this.plants.addPlant(this.character.gridPosition);
-      inventory.seeds--;
+      if (inventory.seeds > 0) {
+        this.plants.addPlant(this.character.gridPosition);
+        inventory.seeds--;
+      }
     }
   }
 
