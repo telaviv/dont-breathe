@@ -10,6 +10,24 @@ const COLUMNS = 32;
 const ROWS = 24;
 const MAX_O2 = 1000;
 
+const INTRO_TEXT = [
+  '[ press any key ] ',
+  ' ... ... ',
+  '.........',
+  ' just ... ',
+  '... ...',
+  '.........',
+  'breathe.',
+  '',
+  "I don't have much oxygen left.",
+  "but ...",
+  'I still need to breathe.',
+  '',
+  '......',
+  "Let's keep calm.",
+  "We still have a few seeds left.",
+]
+
 const inventory = {
   seeds: 5,
 }
@@ -521,6 +539,8 @@ class SceneManager {
   constructor() {
     this.game = new GameScene();
     this.overlay = new Overlay();
+    this.textBox = new TextBox();
+    this.pauseGame = false;
   }
 
   update(dt) {
@@ -531,7 +551,14 @@ class SceneManager {
     const container = new PIXI.Graphics();
     container.addChild(this.game.draw());
     container.addChild(this.overlay.draw());
+    container.addChild(this.textBox.draw());
     return container;
+  }
+
+  async start() {
+    this.pauseGame = true;
+    this.overlay.opacity = 1;
+    await this.textBox.displayText(INTRO_TEXT);
   }
 }
 
@@ -624,6 +651,8 @@ class GameRunner {
       this.showingModal = true;
       this.modalScene.start();
     }
+
+    this.gameScene.start();
   }
 
   update(dt) {
