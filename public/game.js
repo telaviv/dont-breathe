@@ -211,7 +211,7 @@ class TextBox {
     // now draw the text
     const text = new PIXI.Text(
       this.message, {
-        fontFamily : 'Verdana',
+        fontFamily : 'Helvetica',
         fontSize: 24,
         fontWeight: 'bold',
         fill : WHITE,
@@ -531,18 +531,30 @@ class Stage {
     const playerPosition = this.character.gridPosition;
     if (this.plants.hasPlant(playerPosition)) {
       this.statusMessage = this.plants.plantStatus(playerPosition);
+    } else if (this.postedMessage) {
+      this.statusMessage = this.postedMessage;
     } else {
       this.statusMessage = '';
     }
   }
 
   onKeyDown(keyCode) {
-    if (keyCode === 'KeyP') {
-      if (inventory.seeds > 0 && !this.plants.hasPlant(this.character.gridPosition)) {
-        this.plants.addPlant(this.character.gridPosition);
-        inventory.seeds--;
+    this.postedMessage = '';
+
+    if (keyCode === 'KeyA') {
+      if (inventory.seeds > 0) {
+        if (!this.plants.hasPlant(this.character.gridPosition)) {
+          this.plants.addPlant(this.character.gridPosition);
+          inventory.seeds--;
+        }
+      } else {
+        this.postMessage('No more seeds left.');
       }
     }
+  }
+
+  postMessage(message) {
+    this.postedMessage = message;
   }
 
   drawBackground() {
