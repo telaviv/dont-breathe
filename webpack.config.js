@@ -10,7 +10,10 @@ module.exports = {
   },
   resolve: {
     root: path.resolve('./lib'),
-    extensions: ['', '.js']
+    extensions: ['', '.js'],
+    alias: {
+      'pixi': 'pixi.js',
+    }
   },
   devtool: 'source-map',
   module: {
