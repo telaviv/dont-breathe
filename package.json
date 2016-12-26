@@ -16,6 +16,7 @@
     "babel-preset-es2015-rollup": "^3.0.0",
     "babel-preset-latest": "^6.16.0",
     "eslint": "^3.12.2",
+    "pre-commit": "^1.2.2",
     "webpack": "^1.14.0",
     "webpack-dev-server": "^1.16.2"
   },
@@ -34,6 +35,7 @@
     "biodome",
     "simulation"
   ],
+  "pre-commit": ["lint"],
   "author": "Shawn Krisman",
   "license": "GPL-3.0",
   "bugs": {
