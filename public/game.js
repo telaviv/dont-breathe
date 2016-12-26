@@ -11,7 +11,7 @@ const ROWS = 24;
 const MAX_O2 = 1000;
 
 const INTRO_TEXT = [
-  '[ press any key ] ',
+  '[ press any key ]',
   ' ... ... ',
   '.........',
   ' just ... ',
@@ -42,10 +42,9 @@ const clamp = (value, min, max) => {
 }
 
 class LERP {
-  constructor(time, drawCb) {
+  constructor(time) {
     this.dt = 0;
     this.totalTime = time;
-    this.drawCb = drawCb;
     this.started = false;
   }
 
@@ -65,10 +64,7 @@ class LERP {
       this.resolve();
     }
     this.dt += dt;
-  }
-
-  draw() {
-    return this.drawCb(Math.min(1, this.dt / this.totalTime));
+    return Math.min(1, this.dt / this.totalTime);
   }
 }
 
@@ -311,7 +307,7 @@ class Character {
   }
 
   update(dt) {
-    this.moveCode = this.findMoveCode();
+    this.moveCode = this.findMoveCode()
 
     if (this.timeSinceLastMovement < this.movementDelay || this.moveCode === null) {
       this.timeSinceLastMovement += dt;
@@ -523,6 +519,7 @@ class Plants {
 
 class Overlay {
   constructor() {
+    this.animation = null;
     this.opacity = 0.5;
   }
 
@@ -532,6 +529,19 @@ class Overlay {
     graphics.drawRect(0, 0, BLOCK_SIZE * COLUMNS, BLOCK_SIZE * ROWS);
     graphics.endFill();
     return graphics;
+  }
+
+  async fadeIn(time) {
+    this.animation = new LERP(time);
+    await this.animation.start();
+    this.animation = null;
+  }
+
+  update(dt) {
+    if (this.animation) {
+      const lvalue = this.animation.update(dt);
+      this.opacity = 1 - lvalue;
+    }
   }
 }
 
@@ -544,7 +554,10 @@ class SceneManager {
   }
 
   update(dt) {
-    this.game.update(dt);
+    this.overlay.update(dt);
+    if (!this.pauseGame) {
+      this.game.update(dt);
+    }
   }
 
   draw() {
@@ -559,6 +572,8 @@ class SceneManager {
     this.pauseGame = true;
     this.overlay.opacity = 1;
     await this.textBox.displayText(INTRO_TEXT);
+    await this.overlay.fadeIn(8);
+    this.pauseGame = false;
   }
 }
 
