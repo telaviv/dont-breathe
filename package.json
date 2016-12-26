@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "A closed ecosystem space simulator.",
   "main": "lib/game.js",
-  "dependencies": {},
+  "dependencies": {
+    "pixi.js": "^4.3.0"
+  },
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-core": "^6.21.0",
