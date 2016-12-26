@@ -4,7 +4,9 @@ var webpack = require('webpack');
 module.exports = {
   entry: ['babel-polyfill', './lib/game.js'],
   output: {
-    filename: './public/game.js'
+    path: path.resolve(__dirname, 'build'),
+    publicPath: '',
+    filename: 'game.js'
   },
   devtool: 'source-map',
   module: {
