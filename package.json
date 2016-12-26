@@ -1,0 +1,35 @@
+{
+  "name": "dont-breathe",
+  "version": "1.0.0",
+  "description": "A closed ecosystem space simulator.",
+  "main": "lib/game.js",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "babel-polyfill": "^6.20.0",
+    "babel-preset-es2015-rollup": "^3.0.0",
+    "babel-preset-latest": "^6.16.0",
+    "webpack": "^1.14.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/telaviv/dont-breathe.git"
+  },
+  "keywords": [
+    "dwarf-fortress",
+    "biodome",
+    "simulation"
+  ],
+  "author": "Shawn Krisman",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/telaviv/dont-breathe/issues"
+  },
+  "homepage": "https://github.com/telaviv/dont-breathe#readme"
+}
