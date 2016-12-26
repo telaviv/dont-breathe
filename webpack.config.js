@@ -8,6 +8,10 @@ module.exports = {
     publicPath: '',
     filename: 'game.js'
   },
+  resolve: {
+    root: path.resolve('./lib'),
+    extensions: ['', '.js']
+  },
   devtool: 'source-map',
   module: {
     loaders: [
