@@ -104,7 +104,6 @@ class EventQueue {
   }
 }
 const mainEventQueue = new EventQueue();
-const sceneQueue = new EventQueue();
 
 class Keyboard {
   constructor(eventQueue) {
@@ -408,57 +407,6 @@ class GameScene {
   }
 }
 
-class ModalScene {
-  constructor() {
-    this.fadeInAnimation = new LERP(8, this.drawOverlay.bind(this));
-    this.fadingIn = false;
-    this.textBox = new TextBox();
-  }
-
-  async start() {
-    await this.textBox.displayText([
-      '[ press any key ] ',
-      ' ... ... ',
-      '.........',
-      ' just ... ',
-      '... ...',
-      '.........',
-      'breathe.',
-      '',
-      "I don't have much oxygen left.",
-      "but ...",
-      'I still need to breathe.',
-      '',
-      '......',
-      "Let's keep calm.",
-      "We still have a few seeds left.",
-    ])
-    await this.fadeInAnimation.start();
-    await this.textBox.displayText("[ press 'P' to plant a seed ]");
-    sceneQueue.enqueue('modal-finished');
-  }
-
-  update(dt) {
-    this.fadeInAnimation.update(dt);
-  }
-
-  draw() {
-    return this.fadeInAnimation.draw();
-  }
-
-  drawOverlay(lerpValue) {
-    const graphics = new PIXI.Graphics();
-    graphics.beginFill(BLACK, 1 - lerpValue);
-    graphics.drawRect(0, 0, BLOCK_SIZE * COLUMNS, BLOCK_SIZE * ROWS);
-    graphics.endFill();
-
-    graphics.addChild(this.textBox.draw());
-
-    return graphics;
-  }
-}
-
-
 class Plants {
   constructor() {
     this.grid = [];
@@ -656,44 +604,15 @@ class Stage {
 
 class GameRunner {
   constructor(disableIntro=true) {
-    this.gameScene = new SceneManager();
-    this.modalScene = new ModalScene()
     this.renderer = new PIXI.WebGLRenderer(1024, 768);
-    sceneQueue.listen('modal-finished', this.onModalFinished.bind(this));
-    if (disableIntro) {
-      this.showingModal = false;
-    } else {
-      this.showingModal = true;
-      this.modalScene.start();
-    }
-
+    this.gameScene = new SceneManager();
     this.gameScene.start();
   }
 
   update(dt) {
-    sceneQueue.executeQueue();
-
-    if (this.showingModal) {
-      this.updateModal(dt)
-      return;
-    }
     mainEventQueue.executeQueue();
     this.gameScene.update(dt);
     this.renderer.render(this.gameScene.draw());
-  }
-
-  updateModal(dt) {
-    this.modalScene.update(dt);
-
-    const scene = new PIXI.Container();
-    scene.addChild(this.gameScene.draw());
-    scene.addChild(this.modalScene.draw());
-    this.renderer.render(scene);
-  }
-
-  onModalFinished() {
-    mainEventQueue.clearQueue()
-    this.showingModal = false;
   }
 
   run() {
