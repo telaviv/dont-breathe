@@ -4,6 +4,7 @@
   "description": "A closed ecosystem space simulator.",
   "main": "lib/game.js",
   "dependencies": {
+    "lodash": "^4.17.3",
     "pixi.js": "^4.3.0"
   },
   "devDependencies": {
