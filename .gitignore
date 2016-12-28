@@ -5,3 +5,4 @@ node_modules
 public/game.js*
 build/
 npm-debug.log
+TAGS
